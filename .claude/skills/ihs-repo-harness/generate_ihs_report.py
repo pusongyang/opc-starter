@@ -515,6 +515,11 @@ def build_markdown_report(
     source_basis = max(current.source_files, 1)
     test_ratio = round(current.test_files / source_basis, 3)
 
+    try:
+        output_display = output_path.relative_to(REPO_ROOT).as_posix()
+    except ValueError:
+        output_display = str(output_path)
+
     lines: list[str] = []
     lines.append("# IHS 仓库驾驭评测报告")
     lines.append("")
@@ -522,7 +527,7 @@ def build_markdown_report(
     lines.append(f"- 分析分支: `{branch}`")
     lines.append(f"- 当前提交: `{commit}`")
     lines.append("- 评测框架: IHS (IDE Harness Score)，参考 OpenAI Harness Engineering 的“约束 + 评测 + 回归”闭环。")
-    lines.append(f"- 评测输出: `{output_path.relative_to(REPO_ROOT).as_posix()}`")
+    lines.append(f"- 评测输出: `{output_display}`")
     lines.append("")
     lines.append("## 1) 总览结论")
     lines.append("")
