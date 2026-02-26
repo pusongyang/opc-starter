@@ -366,7 +366,7 @@ def run_runtime_checks(skip_runtime_checks: bool) -> dict[str, Any]:
     command_plan = [
         ("type_check", ["npm", "run", "type-check"]),
         ("unit_test", ["npm", "run", "test"]),
-        ("coverage", ["npm", "run", "coverage", "--", "--reporter=json-summary"]),
+        ("coverage", ["npm", "run", "coverage", "--", "--coverage.reporter=json-summary"]),
     ]
 
     result: dict[str, Any] = {"commands": []}
