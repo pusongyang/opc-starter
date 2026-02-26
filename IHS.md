@@ -1,8 +1,8 @@
 # IHS 仓库驾驭评测报告
 
-- 生成时间: 2026-02-26 08:49:09 UTC
+- 生成时间: 2026-02-26 08:51:57 UTC
 - 分析分支: `cursor/-bc-96d35c3d-f146-409d-a9bf-f451d660ee61-5d6d`
-- 当前提交: `bb3dc82`
+- 当前提交: `4b5381b`
 - 评测框架: IHS (IDE Harness Score)，参考 OpenAI Harness Engineering 的“约束 + 评测 + 回归”闭环。
 - 评测输出: `IHS.md`
 
@@ -38,8 +38,8 @@
 | 检查项 | 命令 | 结果 | 耗时(s) |
 | --- | --- | --- | ---: |
 | Type Check | `npm run type-check` | `pass` | 0.14 |
-| Unit Test | `npm run test` | `pass` | 5.24 |
-| Coverage | `npm run coverage -- --coverage.reporter=json-summary` | `fail` | 6.54 |
+| Unit Test | `npm run test` | `pass` | 5.32 |
+| Coverage | `npm run coverage -- --coverage.reporter=json-summary` | `fail` | 6.69 |
 
 ## 4) 文档对齐（Docs Alignment）
 
@@ -116,19 +116,19 @@
       {
         "status": "pass",
         "returncode": 0,
-        "duration_seconds": 5.24,
+        "duration_seconds": 5.32,
         "command": "npm run test",
         "cwd": "/workspace/app",
-        "stdout_tail": "\nstdout | src/lib/agent/tools/registry.test.ts > executeToolByName > should return error for unknown tool\n[ToolRegistry] executeToolByName: unknownTool {}\n\nstdout | src/lib/agent/tools/registry.test.ts > executeToolByName > should validate params for executeToolByName\n[ToolRegistry] executeToolByName: validatedTool {}\n\n ✓ src/lib/agent/tools/registry.test.ts (9 tests) 9ms\n ✓ src/components/agent/a2ui/__tests__/utils.test.ts (12 tests) 6ms\n ✓ src/types/__tests__/error.test.ts (19 tests) 5ms\n ✓ src/lib/agent/tools/navigation/index.test.ts (8 tests) 5ms\n ✓ src/lib/agent/tools/_template/index.test.ts (9 tests) 5ms\n ✓ src/utils/imageCompressor.test.ts (5 tests) 4ms\n ✓ src/config/__tests__/agentSuggestions.test.ts (11 tests) 4ms\n ↓ src/utils/fileHash.test.ts (5 tests | 5 skipped)\n\n Test Files  21 passed | 1 skipped (22)\n      Tests  268 passed | 5 skipped (273)\n   Start at  08:48:58\n   Duration  4.91s (transform 824ms, setup 725ms, import 2.10s, tests 1.96s, environment 7.47s)",
+        "stdout_tail": "\nstdout | src/lib/agent/tools/registry.test.ts > executeToolByName > should return error for unknown tool\n[ToolRegistry] executeToolByName: unknownTool {}\n\nstdout | src/lib/agent/tools/registry.test.ts > executeToolByName > should validate params for executeToolByName\n[ToolRegistry] executeToolByName: validatedTool {}\n\n ✓ src/lib/agent/tools/registry.test.ts (9 tests) 10ms\n ✓ src/lib/reactive/adapters/__tests__/SupabaseAdapter.test.ts (14 tests) 13ms\n ✓ src/types/__tests__/error.test.ts (19 tests) 5ms\n ✓ src/components/agent/a2ui/__tests__/utils.test.ts (12 tests) 5ms\n ✓ src/utils/imageCompressor.test.ts (5 tests) 4ms\n ✓ src/lib/agent/tools/_template/index.test.ts (9 tests) 5ms\n ✓ src/config/__tests__/agentSuggestions.test.ts (11 tests) 4ms\n ↓ src/utils/fileHash.test.ts (5 tests | 5 skipped)\n\n Test Files  21 passed | 1 skipped (22)\n      Tests  268 passed | 5 skipped (273)\n   Start at  08:51:45\n   Duration  4.99s (transform 796ms, setup 773ms, import 2.07s, tests 2.01s, environment 7.38s)",
         "stderr_tail": "stderr | src/components/agent/a2ui/__tests__/A2UIRenderer.test.tsx > A2UIRenderer - 未知组件处理 > 渲染未知组件类型的警告\n[A2UI] 未知组件类型: unknown-type\n\nstderr | src/components/agent/a2ui/__tests__/A2UIRenderer.test.tsx > A2UIRenderer - 未知组件处理 > 显示未知组件的 ID\n[A2UI] 未知组件类型: invalid-component\n\nstderr | src/lib/agent/__tests__/sseClient.test.ts > withRetry > 失败后重试\n[SSE] 第 1 次重试，1000ms 后... First fail\n\nstderr | src/lib/agent/__tests__/sseClient.test.ts > withRetry > 达到最大重试次数后抛出错误\n[SSE] 第 1 次重试，1000ms 后... Always fail\n\nstderr | src/lib/agent/__tests__/sseClient.test.ts > withRetry > 达到最大重试次数后抛出错误\n[SSE] 第 2 次重试，2000ms 后... Always fail\n\nstderr | src/lib/agent/__tests__/sseClient.test.ts > withRetry > 达到最大重试次数后抛出错误\n[SSE] 第 3 次重试，4000ms 后... Always fail\n\nstderr | src/lib/agent/__tests__/sseClient.test.ts > withRetry > 调用重试回调\n[SSE] 第 1 次重试，1000ms 后... First fail"
       },
       {
         "status": "fail",
         "returncode": 1,
-        "duration_seconds": 6.54,
+        "duration_seconds": 6.69,
         "command": "npm run coverage -- --coverage.reporter=json-summary",
         "cwd": "/workspace/app",
-        "stdout_tail": "\nstdout | src/lib/agent/tools/registry.test.ts > executeToolByName > should return error for unknown tool\n[ToolRegistry] executeToolByName: unknownTool {}\n\nstdout | src/lib/agent/tools/registry.test.ts > executeToolByName > should validate params for executeToolByName\n[ToolRegistry] executeToolByName: validatedTool {}\n\n ✓ src/lib/agent/tools/registry.test.ts (9 tests) 10ms\n ✓ src/components/agent/a2ui/__tests__/utils.test.ts (12 tests) 6ms\n ✓ src/lib/agent/tools/navigation/index.test.ts (8 tests) 7ms\n ✓ src/types/__tests__/error.test.ts (19 tests) 6ms\n ✓ src/lib/agent/tools/_template/index.test.ts (9 tests) 5ms\n ✓ src/utils/imageCompressor.test.ts (5 tests) 5ms\n ✓ src/config/__tests__/agentSuggestions.test.ts (11 tests) 4ms\n ↓ src/utils/fileHash.test.ts (5 tests | 5 skipped)\n\n Test Files  21 passed | 1 skipped (22)\n      Tests  268 passed | 5 skipped (273)\n   Start at  08:49:03\n   Duration  6.08s (transform 826ms, setup 1.10s, import 2.34s, tests 2.25s, environment 7.50s)",
+        "stdout_tail": "\nstdout | src/lib/agent/tools/registry.test.ts > executeToolByName > should return error for unknown tool\n[ToolRegistry] executeToolByName: unknownTool {}\n\nstdout | src/lib/agent/tools/registry.test.ts > executeToolByName > should validate params for executeToolByName\n[ToolRegistry] executeToolByName: validatedTool {}\n\n ✓ src/lib/agent/tools/registry.test.ts (9 tests) 11ms\n ✓ src/lib/agent/tools/navigation/index.test.ts (8 tests) 6ms\n ✓ src/types/__tests__/error.test.ts (19 tests) 6ms\n ✓ src/components/agent/a2ui/__tests__/utils.test.ts (12 tests) 8ms\n ✓ src/lib/agent/tools/_template/index.test.ts (9 tests) 5ms\n ✓ src/utils/imageCompressor.test.ts (5 tests) 4ms\n ✓ src/config/__tests__/agentSuggestions.test.ts (11 tests) 4ms\n ↓ src/utils/fileHash.test.ts (5 tests | 5 skipped)\n\n Test Files  21 passed | 1 skipped (22)\n      Tests  268 passed | 5 skipped (273)\n   Start at  08:51:50\n   Duration  6.29s (transform 843ms, setup 1.12s, import 2.33s, tests 2.21s, environment 7.49s)",
         "stderr_tail": "\nstderr | src/lib/agent/__tests__/sseClient.test.ts > withRetry > 失败后重试\n[SSE] 第 1 次重试，1000ms 后... First fail\n\nstderr | src/lib/agent/__tests__/sseClient.test.ts > withRetry > 达到最大重试次数后抛出错误\n[SSE] 第 1 次重试，1000ms 后... Always fail\n\nstderr | src/lib/agent/__tests__/sseClient.test.ts > withRetry > 达到最大重试次数后抛出错误\n[SSE] 第 2 次重试，2000ms 后... Always fail\n\nstderr | src/lib/agent/__tests__/sseClient.test.ts > withRetry > 达到最大重试次数后抛出错误\n[SSE] 第 3 次重试，4000ms 后... Always fail\n\nstderr | src/lib/agent/__tests__/sseClient.test.ts > withRetry > 调用重试回调\n[SSE] 第 1 次重试，1000ms 后... First fail\n\nERROR: Coverage for lines (21.25%) does not meet global threshold (80%)\nERROR: Coverage for functions (22.05%) does not meet global threshold (80%)\nERROR: Coverage for statements (21.06%) does not meet global threshold (80%)\nERROR: Coverage for branches (15.59%) does not meet global threshold (80%)"
       }
     ],
@@ -144,19 +144,19 @@
     "unit_test": {
       "status": "pass",
       "returncode": 0,
-      "duration_seconds": 5.24,
+      "duration_seconds": 5.32,
       "command": "npm run test",
       "cwd": "/workspace/app",
-      "stdout_tail": "\nstdout | src/lib/agent/tools/registry.test.ts > executeToolByName > should return error for unknown tool\n[ToolRegistry] executeToolByName: unknownTool {}\n\nstdout | src/lib/agent/tools/registry.test.ts > executeToolByName > should validate params for executeToolByName\n[ToolRegistry] executeToolByName: validatedTool {}\n\n ✓ src/lib/agent/tools/registry.test.ts (9 tests) 9ms\n ✓ src/components/agent/a2ui/__tests__/utils.test.ts (12 tests) 6ms\n ✓ src/types/__tests__/error.test.ts (19 tests) 5ms\n ✓ src/lib/agent/tools/navigation/index.test.ts (8 tests) 5ms\n ✓ src/lib/agent/tools/_template/index.test.ts (9 tests) 5ms\n ✓ src/utils/imageCompressor.test.ts (5 tests) 4ms\n ✓ src/config/__tests__/agentSuggestions.test.ts (11 tests) 4ms\n ↓ src/utils/fileHash.test.ts (5 tests | 5 skipped)\n\n Test Files  21 passed | 1 skipped (22)\n      Tests  268 passed | 5 skipped (273)\n   Start at  08:48:58\n   Duration  4.91s (transform 824ms, setup 725ms, import 2.10s, tests 1.96s, environment 7.47s)",
+      "stdout_tail": "\nstdout | src/lib/agent/tools/registry.test.ts > executeToolByName > should return error for unknown tool\n[ToolRegistry] executeToolByName: unknownTool {}\n\nstdout | src/lib/agent/tools/registry.test.ts > executeToolByName > should validate params for executeToolByName\n[ToolRegistry] executeToolByName: validatedTool {}\n\n ✓ src/lib/agent/tools/registry.test.ts (9 tests) 10ms\n ✓ src/lib/reactive/adapters/__tests__/SupabaseAdapter.test.ts (14 tests) 13ms\n ✓ src/types/__tests__/error.test.ts (19 tests) 5ms\n ✓ src/components/agent/a2ui/__tests__/utils.test.ts (12 tests) 5ms\n ✓ src/utils/imageCompressor.test.ts (5 tests) 4ms\n ✓ src/lib/agent/tools/_template/index.test.ts (9 tests) 5ms\n ✓ src/config/__tests__/agentSuggestions.test.ts (11 tests) 4ms\n ↓ src/utils/fileHash.test.ts (5 tests | 5 skipped)\n\n Test Files  21 passed | 1 skipped (22)\n      Tests  268 passed | 5 skipped (273)\n   Start at  08:51:45\n   Duration  4.99s (transform 796ms, setup 773ms, import 2.07s, tests 2.01s, environment 7.38s)",
       "stderr_tail": "stderr | src/components/agent/a2ui/__tests__/A2UIRenderer.test.tsx > A2UIRenderer - 未知组件处理 > 渲染未知组件类型的警告\n[A2UI] 未知组件类型: unknown-type\n\nstderr | src/components/agent/a2ui/__tests__/A2UIRenderer.test.tsx > A2UIRenderer - 未知组件处理 > 显示未知组件的 ID\n[A2UI] 未知组件类型: invalid-component\n\nstderr | src/lib/agent/__tests__/sseClient.test.ts > withRetry > 失败后重试\n[SSE] 第 1 次重试，1000ms 后... First fail\n\nstderr | src/lib/agent/__tests__/sseClient.test.ts > withRetry > 达到最大重试次数后抛出错误\n[SSE] 第 1 次重试，1000ms 后... Always fail\n\nstderr | src/lib/agent/__tests__/sseClient.test.ts > withRetry > 达到最大重试次数后抛出错误\n[SSE] 第 2 次重试，2000ms 后... Always fail\n\nstderr | src/lib/agent/__tests__/sseClient.test.ts > withRetry > 达到最大重试次数后抛出错误\n[SSE] 第 3 次重试，4000ms 后... Always fail\n\nstderr | src/lib/agent/__tests__/sseClient.test.ts > withRetry > 调用重试回调\n[SSE] 第 1 次重试，1000ms 后... First fail"
     },
     "coverage": {
       "status": "fail",
       "returncode": 1,
-      "duration_seconds": 6.54,
+      "duration_seconds": 6.69,
       "command": "npm run coverage -- --coverage.reporter=json-summary",
       "cwd": "/workspace/app",
-      "stdout_tail": "\nstdout | src/lib/agent/tools/registry.test.ts > executeToolByName > should return error for unknown tool\n[ToolRegistry] executeToolByName: unknownTool {}\n\nstdout | src/lib/agent/tools/registry.test.ts > executeToolByName > should validate params for executeToolByName\n[ToolRegistry] executeToolByName: validatedTool {}\n\n ✓ src/lib/agent/tools/registry.test.ts (9 tests) 10ms\n ✓ src/components/agent/a2ui/__tests__/utils.test.ts (12 tests) 6ms\n ✓ src/lib/agent/tools/navigation/index.test.ts (8 tests) 7ms\n ✓ src/types/__tests__/error.test.ts (19 tests) 6ms\n ✓ src/lib/agent/tools/_template/index.test.ts (9 tests) 5ms\n ✓ src/utils/imageCompressor.test.ts (5 tests) 5ms\n ✓ src/config/__tests__/agentSuggestions.test.ts (11 tests) 4ms\n ↓ src/utils/fileHash.test.ts (5 tests | 5 skipped)\n\n Test Files  21 passed | 1 skipped (22)\n      Tests  268 passed | 5 skipped (273)\n   Start at  08:49:03\n   Duration  6.08s (transform 826ms, setup 1.10s, import 2.34s, tests 2.25s, environment 7.50s)",
+      "stdout_tail": "\nstdout | src/lib/agent/tools/registry.test.ts > executeToolByName > should return error for unknown tool\n[ToolRegistry] executeToolByName: unknownTool {}\n\nstdout | src/lib/agent/tools/registry.test.ts > executeToolByName > should validate params for executeToolByName\n[ToolRegistry] executeToolByName: validatedTool {}\n\n ✓ src/lib/agent/tools/registry.test.ts (9 tests) 11ms\n ✓ src/lib/agent/tools/navigation/index.test.ts (8 tests) 6ms\n ✓ src/types/__tests__/error.test.ts (19 tests) 6ms\n ✓ src/components/agent/a2ui/__tests__/utils.test.ts (12 tests) 8ms\n ✓ src/lib/agent/tools/_template/index.test.ts (9 tests) 5ms\n ✓ src/utils/imageCompressor.test.ts (5 tests) 4ms\n ✓ src/config/__tests__/agentSuggestions.test.ts (11 tests) 4ms\n ↓ src/utils/fileHash.test.ts (5 tests | 5 skipped)\n\n Test Files  21 passed | 1 skipped (22)\n      Tests  268 passed | 5 skipped (273)\n   Start at  08:51:50\n   Duration  6.29s (transform 843ms, setup 1.12s, import 2.33s, tests 2.21s, environment 7.49s)",
       "stderr_tail": "\nstderr | src/lib/agent/__tests__/sseClient.test.ts > withRetry > 失败后重试\n[SSE] 第 1 次重试，1000ms 后... First fail\n\nstderr | src/lib/agent/__tests__/sseClient.test.ts > withRetry > 达到最大重试次数后抛出错误\n[SSE] 第 1 次重试，1000ms 后... Always fail\n\nstderr | src/lib/agent/__tests__/sseClient.test.ts > withRetry > 达到最大重试次数后抛出错误\n[SSE] 第 2 次重试，2000ms 后... Always fail\n\nstderr | src/lib/agent/__tests__/sseClient.test.ts > withRetry > 达到最大重试次数后抛出错误\n[SSE] 第 3 次重试，4000ms 后... Always fail\n\nstderr | src/lib/agent/__tests__/sseClient.test.ts > withRetry > 调用重试回调\n[SSE] 第 1 次重试，1000ms 后... First fail\n\nERROR: Coverage for lines (21.25%) does not meet global threshold (80%)\nERROR: Coverage for functions (22.05%) does not meet global threshold (80%)\nERROR: Coverage for statements (21.06%) does not meet global threshold (80%)\nERROR: Coverage for branches (15.59%) does not meet global threshold (80%)"
     },
     "coverage_pct": 21.25,
