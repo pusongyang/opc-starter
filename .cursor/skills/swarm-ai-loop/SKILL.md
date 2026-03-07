@@ -287,27 +287,23 @@ python3 .claude/skills/ihs-repo-harness/scripts/generate_ihs_report.py --output 
 
 ## 5) 与外循环的协作模式
 
-> **互补关系**: 外循环 (`swarm-side-effort-loop`) 引入新的业务复杂度，负责跑得更快。内循环 (本技能) 定期消除隐患，负责慢下来做对。一快一慢，动态平衡。
-
 ```
-外循环 (Side-Effort Loop)        内循环 (Swarm AI Loop)
-─────────────────────────        ──────────────────────
-① INTAKE: 需求接入                     │
-② INVESTIGATE: 代码库调研               │
-③ DECOMPOSE: 任务拆解                  │
-④ PLAN: 执行计划                       │
-⑤ DISPATCH: 分发执行                   │
-   ↓                                   │
-全部 Task 完成 ─────────────────▶ ① SCAN: 分析变更
-                                  ② ASSESS: 质量门禁
-                                  ③ REPAIR: 修复/建议
-                                  ④ ANCHOR: 打 Tag
-                                     │
-修复/建议 ◀───────────────────── 质量报告
+外循环 (Feature/Hotfix)          内循环 (Swarm AI Loop)
+───────────────────────          ──────────────────────
+需求分析                              │
    ↓                                  │
-归档 Epic                              │
+分支开发                              │
    ↓                                  │
-下一个需求 ──────────────────────▶ 下一轮 SCAN
+PR/MR 提交 ──────────────────────▶ ① SCAN: 分析变更
+                                   ② ASSESS: 质量门禁
+                                   ③ REPAIR: 修复/建议
+                                   ④ ANCHOR: 打 Tag
+                                      │
+PR Review ◀──────────────────────── 质量报告
+   ↓                                  │
+合入主分支                             │
+   ↓                                  │
+部署上线 ────────────────────────▶ 下一轮 SCAN
 ```
 
 **CI/CD 集成点**:
