@@ -31,7 +31,7 @@ function createMockDeps(overrides?: Partial<Parameters<typeof createOfflineQueue
 
 function createOp(overrides?: Partial<WriteOperation>): WriteOperation {
   return {
-    type: 'upsert',
+    type: 'update',
     entityType: 'person',
     id: 'test-1',
     data: { name: 'Test' },
@@ -80,7 +80,7 @@ describe('OfflineQueueManager', () => {
       const deps = createMockDeps()
       const manager = createOfflineQueueManager(deps)
 
-      await manager.enqueueOperation({ type: 'upsert', entityType: 'person', id: '1', data: {} })
+      await manager.enqueueOperation({ type: 'add', entityType: 'person', id: '1', data: {} })
 
       const queue = manager.getQueue()
       expect(queue).toHaveLength(1)
@@ -92,7 +92,7 @@ describe('OfflineQueueManager', () => {
       const deps = createMockDeps()
       const manager = createOfflineQueueManager(deps)
 
-      await manager.enqueueOperation({ type: 'upsert', entityType: 'person', id: '1', data: {} })
+      await manager.enqueueOperation({ type: 'add', entityType: 'person', id: '1', data: {} })
 
       expect(localStorage.setItem).toHaveBeenCalledWith('test-queue', expect.any(String))
     })

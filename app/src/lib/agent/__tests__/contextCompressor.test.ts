@@ -65,7 +65,6 @@ describe('contextCompressor', () => {
               name: 'testTool',
               arguments: { foo: 'bar' },
               result: { success: true },
-              status: 'success' as const,
             },
           ],
         }),
