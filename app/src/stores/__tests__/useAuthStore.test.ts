@@ -4,7 +4,7 @@
  */
 
 import { beforeEach, describe, expect, it, vi } from 'vitest'
-import type { User } from '@supabase/supabase-js'
+import type { AuthError, User } from '@supabase/supabase-js'
 import { useAuthStore } from '../useAuthStore'
 
 vi.mock('@/lib/supabase/auth', () => ({
@@ -42,7 +42,13 @@ describe('useAuthStore', () => {
       const { authService } = await import('@/lib/supabase/auth')
       vi.mocked(authService.getCurrentUser).mockResolvedValue(mockUser)
       vi.mocked(authService.onAuthStateChange).mockImplementation(() => ({
-        data: { subscription: { unsubscribe: vi.fn() } },
+        data: {
+          subscription: {
+            id: 'test-sub',
+            callback: vi.fn(),
+            unsubscribe: vi.fn(),
+          },
+        },
       }))
 
       const { initialize } = useAuthStore.getState()
@@ -82,7 +88,10 @@ describe('useAuthStore', () => {
       const { authService } = await import('@/lib/supabase/auth')
       vi.mocked(authService.signIn).mockResolvedValue({
         user: null,
-        error: { message: 'Invalid credentials', code: 'invalid_credentials' },
+        error: {
+          message: 'Invalid credentials',
+          code: 'invalid_credentials',
+        } as unknown as AuthError,
       })
 
       const { signIn } = useAuthStore.getState()
@@ -113,7 +122,10 @@ describe('useAuthStore', () => {
       const { authService } = await import('@/lib/supabase/auth')
       vi.mocked(authService.signUp).mockResolvedValue({
         user: null,
-        error: { message: 'Email already registered', code: 'user_exists' },
+        error: {
+          message: 'Email already registered',
+          code: 'user_exists',
+        } as unknown as AuthError,
       })
 
       const { signUp } = useAuthStore.getState()
@@ -144,7 +156,10 @@ describe('useAuthStore', () => {
     it('signOut 失败时设置 error', async () => {
       const { authService } = await import('@/lib/supabase/auth')
       vi.mocked(authService.signOut).mockResolvedValue({
-        error: { message: 'Network error' },
+        error: {
+          message: 'Network error',
+          code: 'network_error',
+        } as unknown as AuthError,
       })
 
       const { signOut } = useAuthStore.getState()
