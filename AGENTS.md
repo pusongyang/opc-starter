@@ -47,7 +47,7 @@ React 19.1 · TypeScript 5.9 · Vite 7.1 · **Tailwind CSS 4.1** · Supabase 2.8
 ```bash
 npm run ai:check    # lint:check + format:check + type-check + coverage + build
 npm run test        # 单元测试
-npm run coverage    # 覆盖率检查（阈值: lines 21%, branches 15%）
+npm run coverage    # 覆盖率检查（阈值: lines 25%, branches 18%）
 ```
 
 ## Cursor Cloud specific instructions

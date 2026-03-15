@@ -36,11 +36,10 @@ describe('useToast', () => {
   it('dismiss(id) 移除指定 toast', () => {
     const { result } = renderHook(() => useToast())
 
-    let id: string
     act(() => {
       result.current.toast({ title: '测试' })
     })
-    id = useToastStore.getState().toasts[0].id
+    const id = useToastStore.getState().toasts[0].id
     expect(useToastStore.getState().toasts).toHaveLength(1)
 
     act(() => {
