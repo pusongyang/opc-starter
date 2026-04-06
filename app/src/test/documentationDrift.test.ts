@@ -10,11 +10,11 @@ function read(relativePath: string): string {
   return fs.readFileSync(path.join(WORKSPACE_ROOT, relativePath), 'utf-8')
 }
 
-function extractSingleQuotedList(content: string, marker: string): string[] {
-  const index = content.indexOf(marker)
-  expect(index).toBeGreaterThanOrEqual(0)
-  const tail = content.slice(index, index + 400)
-  return Array.from(tail.matchAll(/'([^']+)'/g), (match) => match[1])
+function extractSingleQuotedList(content: string, pattern: RegExp): string[] {
+  const match = content.match(pattern)
+  expect(match, `pattern not found: ${pattern}`).not.toBeNull()
+
+  return Array.from(match![1].matchAll(/'([^']+)'/g), (item) => item[1])
 }
 
 describe('documentation drift guards', () => {
@@ -41,8 +41,11 @@ describe('documentation drift guards', () => {
     const sourceTypes = read('app/supabase/functions/ai-assistant/types.ts')
     const sourceTools = read('app/supabase/functions/ai-assistant/tools.ts')
 
-    const currentPageEnum = extractSingleQuotedList(sourceTypes, 'currentPage?:')
-    const navigatePageEnum = extractSingleQuotedList(sourceTools, 'enum: [')
+    const currentPageEnum = extractSingleQuotedList(
+      sourceTypes,
+      /currentPage\?:\s*((?:'[^']+'\s*\|\s*)*'[^']+')/
+    )
+    const navigatePageEnum = extractSingleQuotedList(sourceTools, /enum:\s*(\[[^\]]+\])/)
 
     expect(schema.$defs.agentContext.properties.currentPage.enum).toEqual(currentPageEnum)
     expect(schema.$defs.navigateToPageArgs.properties.page.enum).toEqual(navigatePageEnum)
