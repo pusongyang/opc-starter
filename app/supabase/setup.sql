@@ -7,11 +7,13 @@
 -- Features: Supabase Auth, RLS, Organization Management
 -- Usage: Execute in Supabase SQL Editor (PostgreSQL 14+)
 -- 
--- Tables (4):
+-- Tables (6):
 --   - profiles: 用户资料（1:1 auth.users）
 --   - organizations: 组织架构（ltree 层级）
 --   - organization_members: 组织成员关系
---   - agent_threads/messages/actions: Agent 会话
+--   - agent_threads: Agent 会话线程
+--   - agent_messages: Agent 消息记录
+--   - agent_actions: Agent 工具/动作记录
 -- =====================================================
 
 -- =====================================================
@@ -481,6 +483,34 @@ BEGIN
   RETURNING id INTO v_new_org_id;
   
   RETURN v_new_org_id;
+END;
+$$ LANGUAGE plpgsql
+SECURITY DEFINER
+SET search_path = public, extensions;
+
+CREATE OR REPLACE FUNCTION admin_delete_organization(p_org_id UUID)
+RETURNS VOID AS $$
+DECLARE
+  v_user_role TEXT;
+BEGIN
+  SELECT role INTO v_user_role
+  FROM public.profiles
+  WHERE id = auth.uid();
+
+  IF v_user_role IS NULL OR v_user_role != 'admin' THEN
+    RAISE EXCEPTION 'Permission denied: Only admins can delete organizations';
+  END IF;
+
+  IF NOT EXISTS (
+    SELECT 1
+    FROM public.organizations
+    WHERE id = p_org_id
+  ) THEN
+    RAISE EXCEPTION 'Organization not found';
+  END IF;
+
+  DELETE FROM public.organizations
+  WHERE id = p_org_id;
 END;
 $$ LANGUAGE plpgsql
 SECURITY DEFINER

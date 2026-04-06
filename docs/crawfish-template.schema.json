@@ -1,0 +1,119 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://opc-starter.local/schemas/crawfish-template.schema.json",
+  "title": "Crawfish Template Compatibility Contract",
+  "description": "Current branch compatibility schema for the AI assistant request, page context, and tool argument constraints. `crawfishSchemaReference.ts` and `CreatePolarClawWizard.tsx` are absent on this branch, so this file is the authoritative downstream schema anchor until those runtime references land.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["messages"],
+  "properties": {
+    "messages": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "$ref": "#/$defs/requestMessage"
+      }
+    },
+    "context": {
+      "$ref": "#/$defs/agentContext"
+    },
+    "threadId": {
+      "type": "string",
+      "minLength": 1
+    }
+  },
+  "$defs": {
+    "requestMessage": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["role", "content"],
+      "properties": {
+        "role": {
+          "type": "string",
+          "enum": ["user", "assistant", "tool"]
+        },
+        "content": {
+          "type": "string"
+        },
+        "toolCallId": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        }
+      }
+    },
+    "viewContext": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "viewMode": {
+          "type": "string"
+        },
+        "teamId": {
+          "type": ["string", "null"]
+        },
+        "teamName": {
+          "type": ["string", "null"]
+        }
+      }
+    },
+    "agentContext": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "currentPage": {
+          "type": "string",
+          "enum": ["dashboard", "persons", "profile", "settings", "cloud-storage", "other"]
+        },
+        "viewContext": {
+          "$ref": "#/$defs/viewContext"
+        }
+      }
+    },
+    "navigateToPageArgs": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["page"],
+      "properties": {
+        "page": {
+          "type": "string",
+          "enum": ["home", "persons", "profile", "settings", "storage"]
+        }
+      }
+    },
+    "renderUIArgs": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["component"],
+      "properties": {
+        "surfaceId": {
+          "type": "string"
+        },
+        "component": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["id", "type"],
+          "properties": {
+            "id": {
+              "type": "string"
+            },
+            "type": {
+              "type": "string",
+              "enum": ["card", "button", "text", "badge", "progress"]
+            },
+            "props": {
+              "type": "object"
+            },
+            "children": {
+              "type": "array"
+            }
+          }
+        },
+        "dataModel": {
+          "type": "object"
+        }
+      }
+    }
+  }
+}
