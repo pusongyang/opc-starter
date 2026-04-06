@@ -1,25 +1,24 @@
 # 阿里云部署指南
 
-> OPC-Starter 一人公司启动器 | 阿里云全托管部署方案
-> 
-> 适用版本: v1.0+ | 最后更新: 2026-01
+> OPC-Starter 一人公司启动器 | 阿里云 ESA Pages + Supabase 部署方案
+>
+> 适用版本: v1.1+ | 最后更新: 2026-04
 
 ---
 
 ## 📋 目录
 
 - [架构概览](#架构概览)
-- [先决条件](#先决条件)
-- [快速部署 (3 步完成)](#快速部署-3-步完成)
+- [部署前确认](#部署前确认)
+- [快速部署](#快速部署)
 - [详细部署步骤](#详细部署步骤)
-  - [Step 1: Supabase 数据库](#step-1-supabase-数据库)
-  - [Step 2: 百炼 AI API](#step-2-百炼-ai-api)
-  - [Step 3: ESA Pages 前端](#step-3-esa-pages-前端)
-- [环境变量配置清单](#环境变量配置清单)
+  - [Step 1: 初始化 Supabase](#step-1-初始化-supabase)
+  - [Step 2: 部署 ai-assistant Edge Function](#step-2-部署-ai-assistant-edge-function)
+  - [Step 3: 构建并发布前端](#step-3-构建并发布前端)
+- [环境变量与 Secret 对照表](#环境变量与-secret-对照表)
 - [自定义域名配置](#自定义域名配置)
 - [安全最佳实践](#安全最佳实践)
 - [故障排除](#故障排除)
-- [常见问题](#常见问题)
 
 ---
 
@@ -63,7 +62,7 @@
 
 ---
 
-## 先决条件
+## 部署前确认
 
 ### 必需账号
 
@@ -95,68 +94,27 @@ git --version
 
 ---
 
-## 快速部署 (3 步完成)
+## 快速部署
 
-> ⏱️ 预计时间: 15-30 分钟
+以下步骤对应当前仓库的真实运行链路：
 
-### Step 1: 配置 Supabase
+1. 在 Supabase SQL Editor 执行 `app/supabase/setup.sql`。
+2. 使用 Supabase CLI 部署 `app/supabase/functions/ai-assistant`，并配置 `ALIYUN_BAILIAN_API_KEY`。
+3. 在 `app/.env.local` 中写入前端所需的 `VITE_SUPABASE_URL` 与 `VITE_SUPABASE_ANON_KEY`。
+4. 在 `app/` 下执行 `npm run build`，然后用 `esa-cli deploy` 发布 `app/dist`。
 
-```bash
-# 1. 访问 Supabase Dashboard 创建项目
-#    https://supabase.com/dashboard
-
-# 2. 在 SQL Editor 执行数据库初始化脚本
-#    脚本位置: app/supabase/setup.sql
-
-# 3. 记录以下信息 (Settings → API):
-#    - Project URL: https://xxx.supabase.co
-#    - anon public key: eyJxxx...
-```
-
-### Step 2: 配置百炼 AI
+建议先在本地完成一次最小验证：
 
 ```bash
-# 1. 访问百炼控制台创建 API Key
-#    https://bailian.console.aliyun.com/cn-beijing/?tab=model#/api-key
-
-# 2. 在 Supabase Dashboard 配置 Edge Function Secret:
-#    Edge Functions → Secrets → Add new secret
-#    Name: ALIYUN_BAILIAN_API_KEY
-#    Value: sk-xxx (你的百炼 API Key)
-```
-
-### Step 3: 部署前端
-
-```bash
-# 1. 克隆项目并进入 app 目录
-git clone https://github.com/your-username/opc-starter.git
-cd opc-starter/app
-
-# 2. 安装依赖
-npm install
-
-# 3. 配置环境变量
-cp env.local.example .env.local
-# 编辑 .env.local，填入 Supabase URL 和 Key
-
-# 4. 构建项目
+cp app/.env.example app/.env.local
 npm run build
-
-# 5. 安装 ESA CLI 并登录
-npm i esa-cli@latest -g
-esa-cli login
-
-# 6. 部署到 ESA Pages
-esa-cli deploy
 ```
-
-**🎉 部署完成！** 访问 ESA 控制台查看你的站点 URL。
 
 ---
 
 ## 详细部署步骤
 
-### Step 1: Supabase 数据库
+### Step 1: 初始化 Supabase
 
 #### 1.1 创建 Supabase 项目
 
@@ -175,7 +133,7 @@ esa-cli deploy
 3. 复制粘贴 `app/supabase/setup.sql` 的全部内容
 4. 点击 **Run** 执行
 
-> 💡 **提示**: 脚本会创建 `profiles`, `organizations`, `organization_members`, `agent_*` 等表，并配置 RLS 安全策略。
+> 💡 **提示**: 脚本会创建 `profiles`、`organizations`、`organization_members`、`agent_threads`、`agent_messages`、`agent_actions` 等表，并配置 RLS 安全策略。
 
 #### 1.3 配置 Storage Bucket
 
@@ -186,7 +144,7 @@ esa-cli deploy
 | Bucket 名称 | 公开访问 | 用途 |
 |-------------|----------|------|
 | `avatars` | ✅ Public | 用户头像 |
-| `uploads` | ❌ Private | 用户上传文件 |
+| `uploads` | ❌ Private | 通用上传文件 |
 
 #### 1.4 获取项目凭证
 
@@ -199,28 +157,15 @@ SUPABASE_ANON_KEY: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
 SUPABASE_SERVICE_ROLE_KEY: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9... # 仅后端使用
 ```
 
-#### 1.5 部署 Edge Functions
+### Step 2: 部署 ai-assistant Edge Function
 
 ```bash
-# 在 app 目录下
 cd app
-
-# 登录 Supabase CLI
 npx supabase login
-
-# 链接到你的项目
 npx supabase link --project-ref <your-project-ref>
-
-# 部署 AI Assistant Function
 npx supabase functions deploy ai-assistant
-
-# 配置 Secrets (下一步获取百炼 API Key 后执行)
 npx supabase secrets set ALIYUN_BAILIAN_API_KEY=sk-xxx
 ```
-
----
-
-### Step 2: 百炼 AI API
 
 #### 2.1 开通百炼服务
 
@@ -258,14 +203,15 @@ npx supabase secrets set ALIYUN_BAILIAN_API_KEY=sk-xxx
 ```bash
 # 测试 Edge Function
 curl -X POST 'https://YOUR_PROJECT_REF.supabase.co/functions/v1/ai-assistant' \
-  -H 'Authorization: Bearer YOUR_ANON_KEY' \
+  -H 'Authorization: Bearer YOUR_ACCESS_TOKEN' \
+  -H 'apikey: YOUR_ANON_KEY' \
   -H 'Content-Type: application/json' \
-  -d '{"messages":[{"role":"user","content":"你好"}]}'
+  -d '{"messages":[{"role":"user","content":"你好"}],"context":{"currentPage":"dashboard"}}'
 ```
 
 ---
 
-### Step 3: ESA Pages 前端
+### Step 3: 构建并发布前端
 
 #### 3.1 安装 ESA CLI
 
@@ -301,7 +247,7 @@ esa-cli login
 cd app
 
 # 复制环境变量模板
-cp env.local.example .env.local
+cp .env.example .env.local
 
 # 编辑配置
 nano .env.local  # 或使用你喜欢的编辑器
@@ -314,21 +260,17 @@ nano .env.local  # 或使用你喜欢的编辑器
 VITE_SUPABASE_URL=https://xxxxx.supabase.co
 VITE_SUPABASE_ANON_KEY=eyJhbGciOiJIUzI1NiIs...
 
-# 开发调试 (可选)
+# 可选开发开关
 VITE_ENABLE_MSW=false
-VITE_LOG_LEVEL=info
+# VITE_MOCK_DATA_ENABLED=true
+# VITE_LOG_LEVEL=info
 ```
 
 #### 3.4 构建项目
 
 ```bash
-# 安装依赖 (如未安装)
 npm install
-
-# 构建生产版本
 npm run build
-
-# 本地预览 (可选)
 npm run preview
 ```
 
@@ -340,15 +282,11 @@ npm run preview
 cat esa.jsonc
 ```
 
-```json
-{
-  "name": "opc-starter",
-  "assets": {
-    "directory": "./dist",
-    "notFoundStrategy": "singlePageApplication"
-  }
-}
-```
+当前仓库内置的 `app/esa.jsonc` 指向：
+
+- `name: "opc-starter"`
+- `assets.directory: "./dist"`
+- `assets.notFoundStrategy: "singlePageApplication"`
 
 **执行部署:**
 
@@ -366,7 +304,7 @@ esa-cli deploy
 
 ---
 
-## 环境变量配置清单
+## 环境变量与 Secret 对照表
 
 ### 前端环境变量 (`.env.local`)
 
@@ -374,7 +312,8 @@ esa-cli deploy
 |--------|------|------|--------|
 | `VITE_SUPABASE_URL` | ✅ | Supabase 项目 URL | `https://xxx.supabase.co` |
 | `VITE_SUPABASE_ANON_KEY` | ✅ | Supabase 匿名 Key | `eyJxxx...` |
-| `VITE_ENABLE_MSW` | ❌ | 启用 Mock (仅开发) | `false` |
+| `VITE_ENABLE_MSW` | ❌ | 本地是否启用 MSW Mock | `false` |
+| `VITE_MOCK_DATA_ENABLED` | ❌ | 本地 mock 数据开关 | `true` |
 | `VITE_LOG_LEVEL` | ❌ | 日志级别 | `info` |
 
 ### Edge Function Secrets
@@ -387,6 +326,8 @@ esa-cli deploy
 | `SUPABASE_SERVICE_ROLE_KEY` | 🔄 | 自动注入 | - |
 
 > 🔄 = Supabase 自动注入，无需手动配置
+>
+> 当前前端不读取 `VITE_DASHSCOPE_API_KEY`、`VITE_OSS_*` 或 `DASHSCOPE_API_KEY`；这些旧变量不要再放入部署模板。
 
 ---
 
@@ -432,7 +373,7 @@ esa-cli deploy
 
 ## 安全最佳实践
 
-### 1. Supabase MCP 安全
+### 1. Supabase 与 RLS 安全
 
 ```yaml
 # 推荐配置
@@ -481,6 +422,7 @@ esa-cli deploy
 ### 4. 生产环境检查清单
 
 - [ ] 关闭前端 MSW Mock (`VITE_ENABLE_MSW=false`)
+- [ ] 如有需要再开启 `VITE_MOCK_DATA_ENABLED`
 - [ ] 设置适当的日志级别 (`VITE_LOG_LEVEL=info` 或 `warn`)
 - [ ] 确认 Supabase RLS 策略正确配置
 - [ ] 确认 Edge Function Secrets 已配置
@@ -553,64 +495,11 @@ curl -X POST 'https://dashscope.aliyuncs.com/compatible-mode/v1/chat/completions
 
 ---
 
-## 常见问题
-
-### Q1: Supabase 免费额度够用吗？
-
-**A:** 对于个人项目或小团队，免费额度 (500MB 数据库, 1GB 存储, 50K MAU) 通常足够。建议在 Dashboard 中设置用量告警。
-
-### Q2: 百炼 AI 有哪些模型可用？
-
-**A:** 本项目默认使用 `qwen-plus`。百炼支持的通义千问模型包括:
-- Qwen-Plus (推荐，长上下文 1M tokens，性价比高)
-- Qwen-Max (最强能力，上下文 256K tokens)
-- Qwen-Turbo (快速响应，中等复杂度)
-
-可在 `ai-assistant/index.ts` 中修改模型配置。
-
-### Q3: 如何切换到其他 LLM 提供商？
-
-**A:** Edge Function 使用 OpenAI SDK 兼容模式，可轻松切换:
-
-```typescript
-// 切换到 OpenAI
-const openai = new OpenAI({
-  apiKey: Deno.env.get('OPENAI_API_KEY'),
-  // 移除 baseURL 使用默认 OpenAI 地址
-})
-
-// 或切换到其他兼容服务
-const openai = new OpenAI({
-  apiKey: Deno.env.get('OTHER_API_KEY'),
-  baseURL: 'https://other-provider.com/v1',
-})
-```
-
-### Q4: ESA Pages 支持哪些区域？
-
-**A:** ESA Pages 支持全球部署，自动通过阿里云 CDN 加速。中国大陆访问需要域名备案。
-
-### Q5: 如何查看部署日志？
-
-**A:** 
-- **ESA Pages**: ESA 控制台 → 站点详情 → 部署记录
-- **Edge Functions**: `npx supabase functions logs <function-name>`
-- **前端错误**: 浏览器开发者工具 Console
-
-### Q6: 支持私有化部署吗？
-
-**A:** 本项目设计为云托管部署。如需私有化:
-- Supabase 可自托管 (Self-hosted Supabase)
-- 前端可部署到任意静态托管服务
-- AI 服务可替换为私有部署的模型
-
----
-
 ## 获取帮助
 
-- 📖 [项目文档](./docs/)
-- 🐛 [提交 Issue](https://github.com/your-username/opc-starter/issues)
-- 💬 [讨论区](https://github.com/your-username/opc-starter/discussions)
+- `README.md`：本地启动与日常开发
+- `app/supabase/SUPABASE_COOKBOOK.md`：数据库与 Edge Function 操作
+- `docs/API.md` / `docs/Swagger.yml`：`ai-assistant` 接口契约
 
 ---
 

@@ -2,6 +2,7 @@
 
 # 环境配置快速设置脚本
 # 用途：快速创建 .env.local 和 .env.test 文件
+# 约束：以 .env.example 为唯一权威模板，不再生成历史遗留字段
 
 set -e
 
@@ -53,11 +54,8 @@ VITE_ENABLE_MSW=false
 VITE_SUPABASE_URL=$supabase_url
 VITE_SUPABASE_ANON_KEY=$supabase_key
 
-# API 基础路径
-VITE_API_BASE_URL=/api
-
-# Mock 数据配置（开发环境不启用）
-VITE_MOCK_DATA_ENABLED=false
+# 可选：调试日志级别
+# VITE_LOG_LEVEL=info
 EOF
         echo "✅ 已创建 .env.local"
         ;;
@@ -76,12 +74,6 @@ VITE_ENABLE_MSW=true
 # Supabase 配置（测试环境不需要真实值）
 VITE_SUPABASE_URL=https://placeholder.supabase.co
 VITE_SUPABASE_ANON_KEY=placeholder-key
-
-# API 基础路径
-VITE_API_BASE_URL=/api
-
-# Mock 数据配置
-VITE_MOCK_DATA_ENABLED=true
 EOF
         echo "✅ 已创建 .env.test"
         ;;

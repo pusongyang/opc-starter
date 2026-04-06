@@ -66,7 +66,7 @@ npm --prefix app install
 VITE_ENABLE_MSW=true npm run dev:test
 
 # 可选：真实 Supabase 模式
-cp app/env.local.example app/.env.local
+cp app/.env.example app/.env.local
 npm run dev
 ```
 
@@ -77,7 +77,14 @@ npm run dev
 ```bash
 VITE_SUPABASE_URL=your_supabase_url
 VITE_SUPABASE_ANON_KEY=your_supabase_anon_key
-VITE_DASHSCOPE_API_KEY=your_dashscope_api_key  # 可选，用于 Agent LLM
+# 可选：本地排查时可开启
+# VITE_LOG_LEVEL=info
+```
+
+服务端 Secret 通过 Supabase Edge Functions Secrets 提供，不写入前端 `.env.local`：
+
+```bash
+ALIYUN_BAILIAN_API_KEY=sk-xxx
 ```
 
 ### 常见问题

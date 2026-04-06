@@ -12,7 +12,7 @@ npm install
 npm run dev:test
 
 # 可选：真实 Supabase 模式
-cp env.local.example .env.local
+cp .env.example .env.local
 npm run dev
 ```
 
@@ -32,9 +32,12 @@ npm run dev
 # Supabase 配置
 VITE_SUPABASE_URL=your_supabase_url
 VITE_SUPABASE_ANON_KEY=your_supabase_anon_key
+```
 
-# Agent LLM 配置 (可选)
-VITE_DASHSCOPE_API_KEY=your_dashscope_api_key
+服务端 Secret 请在 Supabase Edge Functions Secrets 中配置，不写入前端 `.env.local`：
+
+```bash
+ALIYUN_BAILIAN_API_KEY=sk-xxx
 ```
 
 ## 目录结构
